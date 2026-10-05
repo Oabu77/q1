@@ -3,10 +3,13 @@ name: Security CI
 on:
   push:
     branches:
+      - main
       - security/hono-4.13.9-20260926
     paths:
       - package.json
       - package-lock.json
+      - wrangler.jsonc
+      - migrations/**
       - .github/workflows/security-ci.yml
       - src/**
       - tests/**
@@ -14,6 +17,8 @@ on:
     paths:
       - package.json
       - package-lock.json
+      - wrangler.jsonc
+      - migrations/**
       - .github/workflows/security-ci.yml
       - src/**
       - tests/**
@@ -28,6 +33,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
 
       - name: Verify runner
         run: node --version && npm --version
